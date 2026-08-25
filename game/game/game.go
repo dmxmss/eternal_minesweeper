@@ -6,32 +6,20 @@ import (
 
 type Game struct {
 	World *entities.WorldState
-	Viewport *entities.Viewport
-	Camera *entities.Camera
+	renderBuffer RenderBufferInterface
 }
 
 func (g *Game) Start() {
 
 }
 
-func New() *Game {
+func New(renderBuffer RenderBufferInterface) *Game {
 	world := entities.WorldState{
 		Seed: 123,
 	}
 
-	viewport := entities.Viewport{
-		Height: 10,
-		Width: 10,
-	}
-
-	camera := entities.Camera{
-		Coord: entities.Coord{X: 0, Y: 0},
-		Zoom: 1,
-	}
-
 	return &Game{
 		&world,
-		&viewport,
-		&camera,
+		renderBuffer,
 	}
 }
