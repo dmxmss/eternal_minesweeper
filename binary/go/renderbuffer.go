@@ -1,4 +1,4 @@
-package renderbuffer
+package binary
 
 import "encoding/binary"
 
