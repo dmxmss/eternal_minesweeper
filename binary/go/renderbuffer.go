@@ -45,11 +45,15 @@ type RenderBuffer struct {
 	buf   []byte
 }
 
-func New(capacity int) *RenderBuffer {
+func NewRenderBuffer(capacity int) *RenderBuffer {
 	return &RenderBuffer{
 		items: make([]Cell, 0, capacity),
 		buf:   make([]byte, HeaderSize, HeaderSize+capacity*ItemSize),
 	}
+}
+
+func (r *RenderBuffer) Bytes() []byte {
+	return r.buf
 }
 
 func (r *RenderBuffer) SetCells(cells []Cell) {

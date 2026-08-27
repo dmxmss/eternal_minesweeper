@@ -1,4 +1,4 @@
-package game
+package core
 
 import (
 	"github.com/dmxmss/eternal_minesweeper/entities"
@@ -14,7 +14,7 @@ func (g *Game) Start() {
 
 }
 
-func New(mineGenerator MineGenerator, renderBuffer RenderBufferInterface) *Game {
+func NewGame(mineGenerator MineGenerator, renderBuffer RenderBufferInterface) *Game {
 	world := entities.WorldState{
 		Seed: 123,
 	}
@@ -70,4 +70,8 @@ func (g *Game) OpenCell(x, y int64) entities.GameState {
 	g.renderBuffer.Save()
 
 	return entities.GamePlaying
+}
+
+func (g *Game) RenderBuffer() []byte {
+	return g.renderBuffer.Bytes()
 }

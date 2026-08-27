@@ -15,6 +15,10 @@ func NewRenderBufferManager(renderBuffer *binary.RenderBuffer) *RenderBufferMana
 	}
 }
 
+func (r *RenderBufferManager) Bytes() []byte {
+	return r.renderBuffer.Bytes()
+}
+
 func (r *RenderBufferManager) SetCells([]entities.Cell) error {
 }
 
