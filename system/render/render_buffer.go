@@ -19,9 +19,21 @@ func (r *RenderBufferManager) Bytes() []byte {
 	return r.renderBuffer.Bytes()
 }
 
-func (r *RenderBufferManager) SetCells([]entities.Cell) error {
+func (r *RenderBufferManager) SetCells(cells []entities.Cell) error {
+	var binaryCells []binary.Cell
+
+	for _, cell := range cells {
+		binaryCell := binary.CellToBinary(cell)
+		binaryCells = append(binaryCells, binaryCell)
+	}
+
+	r.renderBuffer.SetCells(binaryCells)
+
+	return nil
 }
 
 func (r *RenderBufferManager) Save() error {
+	r.renderBuffer.Save()
 
+	return nil
 }
