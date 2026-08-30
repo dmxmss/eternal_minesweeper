@@ -1,3 +1,7 @@
+import { Camera } from "./game/Camera.js";
+
+const CELL_SIZE = 40;
+
 const go = new Go();
 
 const result = await WebAssembly.instantiateStreaming(
@@ -7,4 +11,4 @@ const result = await WebAssembly.instantiateStreaming(
 
 go.run(result.instance);
 
-console.log(result);
+camera = new Camera(0, 0, 1, CELL_SIZE);
