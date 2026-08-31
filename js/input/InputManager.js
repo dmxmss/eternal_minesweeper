@@ -1,5 +1,5 @@
 export class InputManager {
-  constructor(canvas, screenToCell) {
+  constructor(canvas, screenToCell, clickThreshold) {
     this.canvas = canvas;
     this.screenToCell = screenToCell;
 
@@ -11,6 +11,8 @@ export class InputManager {
     this.isDragging = false;
     this.lastMouseX = 0;
     this.lastMouseY = 0;
+
+    this.clickThreshold = clickThreshold;
 
     this.bindEvents();
   }

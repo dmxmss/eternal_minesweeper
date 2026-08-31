@@ -5,7 +5,7 @@ export class FieldRenderer {
     this.cellSize = cellSize;
   }
 
-  render(cameraX, cameraY, worldViewportLeftTopX, worldViewportLeftTopY, worldViewportBottomRightX, worldViewportBottomRightY) {
+  render(worldViewportLeftTopX, worldViewportLeftTopY, worldViewportBottomRightX, worldViewportBottomRightY) {
     this.ctx.fillStyle = "#222";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
