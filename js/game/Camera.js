@@ -13,7 +13,7 @@ export class Camera {
   // handle camera move (dx, dy in px)
   move(dx, dy) {
     this.worldX -= dx/(this.pixelsPerWorldUnit*this.zoom);  
-    this.worldY -= dy/(this.pixelsPerWorldUnit*this.zoom);  
+    this.worldY += dy/(this.pixelsPerWorldUnit*this.zoom);  
   }
 
   // get cell world coordinates from screen coordinates
@@ -23,8 +23,8 @@ export class Camera {
     const worldViewportY = this.worldY - this.viewportHeight/(2*this.pixelsPerWorldUnit);
 
     // world coordinates relative to viewport left-top corner
-    const worldX = x/this.pixelsPerWorldUnit;
-    const worldY = -y/this.pixelsPerWorldUnit;
+    const worldX = screenX/this.pixelsPerWorldUnit;
+    const worldY = -screenY/this.pixelsPerWorldUnit;
 
     // position relative to camera
     const localX = worldViewportX + worldX;
@@ -57,5 +57,10 @@ export class Camera {
         y: worldViewportRightBottomY
       }
     ]
+  }
+
+  resizeViewport(newWidth, newHeight) {
+    this.viewportWidth = newWidth;
+    this.viewportHeight = newHeight;
   }
 }

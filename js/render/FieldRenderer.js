@@ -10,22 +10,21 @@ export class FieldRenderer {
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     const startX = Math.floor(worldViewportLeftTopX);
-    const startY = Math.ceil(worldViewportBottomRightY);
+    const startY = Math.floor(worldViewportBottomRightY);
 
     const endX = Math.ceil(worldViewportBottomRightX);
-    const endY = Math.floor(worldViewportLeftTopY);
-
+    const endY = Math.ceil(worldViewportLeftTopY);
 
     for (let y = startY; y < endY; y++) {
       for (let x = startX; x < endX; x++) {
-        drawCell(x, y, worldViewportLeftTopX, worldViewportLeftTopY);
+        this.drawCell(x, y, worldViewportLeftTopX, worldViewportLeftTopY);
       }
     }
   }
 
   drawCell(x, y, worldViewportLeftTopX, worldViewportLeftTopY) {
-    const px = cellSize*(x - worldViewportLeftTopX);
-    const py = cellSize*(y - worldViewportLeftTopY);
+    const px = this.cellSize*(x - worldViewportLeftTopX);
+    const py = this.cellSize*(worldViewportLeftTopY - y - 1); // -1 is here because i set cell coordinates in left-bottom corner, but canvas uses left-top corner to draw rectangle
 
     this.ctx.fillStyle = "#aaa";
     this.ctx.fillRect(
