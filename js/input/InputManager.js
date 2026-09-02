@@ -1,5 +1,5 @@
 export class InputManager {
-  constructor(canvas, screenToCell, clickThreshold) {
+  constructor(canvas, screenToCell, dragThreshold) {
     this.canvas = canvas;
     this.screenToCell = screenToCell;
 
@@ -9,10 +9,15 @@ export class InputManager {
     this.onCameraMove = null;
 
     this.isDragging = false;
-    this.lastMouseX = 0;
-    this.lastMouseY = 0;
+    this.isMouseDown = false;
 
-    this.clickThreshold = clickThreshold;
+    this.lastX = 0;
+    this.lastY = 0;
+
+    this.startX = 0;
+    this.startY = 0;
+
+    this.dragThreshold = dragThreshold;
 
     this.bindEvents();
   }
@@ -26,47 +31,65 @@ export class InputManager {
   }
 
   handleMouseDown = (event) => {
-    this.lastMouseX = event.clientX;
-    this.lastMouseY = event.clientY;
-
-    if (event.button === 0 || event.button === 1) {
-      this.isDragging = true;
+    if (event.button !== 0) {
+      return;
     }
+
+    this.startX = event.clientX;
+    this.startY = event.clientY;
+
+    this.lastX = event.clientX;
+    this.lastY = event.clientY;
+
+    this.isDragging = false;
+    this.isMouseDown = true;
   };
 
   handleMouseUp = (event)  => {
-    if (event.button === 0 || event.button === 1) {
-      this.isDragging = false;
-    }
+    if (event.button !== 0) return;
 
-    if (event.button === 0) {
+    if (!this.isDragging) {
       const cell = this.getCellFromEvent(event);
 
       if (cell && this.onCellClick) {
         this.onCellClick(cell.x, cell.y);
       }
     }
+
+    this.isDragging = false;
+    this.isMouseDown = false;
   };
 
   handleMouseMove = (event) => {
-    const rect = this.canvas.getBoundingClientRect;
-
-    const screenX = event.clientX - rect.left;
-    const screenY = event.clientY - rect.top;
-
     if (this.onMouseMove) {
+      const rect = this.canvas.getBoundingClientRect;
+
+      const screenX = event.clientX - rect.left;
+      const screenY = event.clientY - rect.top;
+
       this.onMouseMove(screenX, screenY);
+    }
+
+    if (!this.isMouseDown) return;
+
+    const dxFromStart = event.clientX - this.startX;
+    const dyFromStart = event.clientY - this.startY;
+    
+    const distance = dxFromStart*dxFromStart + dyFromStart*dyFromStart;
+
+    if (!this.isDragging && distance >= this.dragThreshold ** 2) {
+      this.isDragging = true;
     }
 
     if (!this.isDragging) {
       return;
     }
 
-    const dx = event.clientX - this.lastMouseX;
-    const dy = event.clientY - this.lastMouseY;
+    const dx = event.clientX - this.lastX;
+    const dy = event.clientY - this.lastY;
 
-    this.lastMouseX = event.clientX;
-    this.lastMouseY = event.clientY;
+    this.lastX = event.clientX;
+    this.lastY = event.clientY;
 
     if (this.onCameraMove) {
       this.onCameraMove(dx, dy);

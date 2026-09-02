@@ -3,7 +3,7 @@ import { InputManager } from "./input/InputManager.js";
 import { FieldRenderer } from "./render/FieldRenderer.js";
 
 const CELL_SIZE = 40;
-const CLICK_THRESHOLD = 5;
+const DRAG_THRESHOLD = 10;
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -28,7 +28,7 @@ function onCameraMove(dx, dy) {
 const inputManager = new InputManager(
   canvas, 
   (x, y) => camera.screenToCell(x, y),
-  CLICK_THRESHOLD
+  DRAG_THRESHOLD
 );
 
 inputManager.onCellClick = (x, y) => {
