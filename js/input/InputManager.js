@@ -1,3 +1,5 @@
+import { Vector2 } from "../types/Vector2.js";
+ 
 export class InputManager {
   constructor(canvas, screenToCell, dragThreshold) {
     this.canvas = canvas;
@@ -11,11 +13,8 @@ export class InputManager {
     this.isDragging = false;
     this.isMouseDown = false;
 
-    this.lastX = 0;
-    this.lastY = 0;
-
-    this.startX = 0;
-    this.startY = 0;
+    this.lastMouse = new Vector2();
+    this.startMove = new Vector2();
 
     this.dragThreshold = dragThreshold;
 
@@ -35,11 +34,9 @@ export class InputManager {
       return;
     }
 
-    this.startX = event.clientX;
-    this.startY = event.clientY;
+    this.startMove = new Vector2(event.clientX, event.clientY);
 
-    this.lastX = event.clientX;
-    this.lastY = event.clientY;
+    this.lastMouse = new Vector2(event.clientX, event.clientY);
 
     this.isDragging = false;
     this.isMouseDown = true;
@@ -61,21 +58,23 @@ export class InputManager {
   };
 
   handleMouseMove = (event) => {
+    const clientPos = new Vector2(event.clientX, event.clientY);
+
     if (this.onMouseMove) {
       const rect = this.canvas.getBoundingClientRect;
 
-      const screenX = event.clientX - rect.left;
-      const screenY = event.clientY - rect.top;
+      const screenPos = clientPos.sub(
+        new Vector2(rect.left, rect.top)
+      );
 
-      this.onMouseMove(screenX, screenY);
+      this.onMouseMove(screenPos.x, screenPos.y);
     }
 
     if (!this.isMouseDown) return;
 
-    const dxFromStart = event.clientX - this.startX;
-    const dyFromStart = event.clientY - this.startY;
+    const drFromStart = clientPos.sub(this.startMove);
     
-    const distance = dxFromStart*dxFromStart + dyFromStart*dyFromStart;
+    const distance = drFromStart.length();
 
     if (!this.isDragging && distance >= this.dragThreshold ** 2) {
       this.isDragging = true;
@@ -85,14 +84,12 @@ export class InputManager {
       return;
     }
 
-    const dx = event.clientX - this.lastX;
-    const dy = event.clientY - this.lastY;
+    const dr = clientPos.sub(this.lastMouse);
 
-    this.lastX = event.clientX;
-    this.lastY = event.clientY;
+    this.lastMouse = clientPos;
 
     if (this.onCameraMove) {
-      this.onCameraMove(dx, dy);
+      this.onCameraMove(dr.x, dr.y);
     }
   };
 
@@ -112,11 +109,13 @@ export class InputManager {
 
   getCellFromEvent(event) {
     const rect = this.canvas.getBoundingClientRect();
+    const clientPos = new Vector2(event.clientX, event.clientY);
 
-    const screenX = event.clientX - rect.left;
-    const screenY = event.clientY - rect.top;
+    const screenPos = clientPos.sub(
+      new Vector2(rect.left, rect.top)
+    )
 
-    return this.screenToCell(screenX, screenY);
+    return this.screenToCell(screenPos.x, screenPos.y);
   }
 
   destroy() {
