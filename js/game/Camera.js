@@ -1,66 +1,62 @@
+import { Vector2 } from "../types/Vector2.js";
+
 export class Camera {
-  constructor(worldX, worldY, zoom, pixelsPerWorldUnit, viewportWidth, viewportHeight) {
-    this.worldX = worldX;
-    this.worldY = worldY;
+  constructor(position, zoom, pixelsPerWorldUnit, viewportSize) {
+    this.position = position;
 
     this.zoom = zoom;
     this.pixelsPerWorldUnit = pixelsPerWorldUnit;
 
-    this.viewportWidth = viewportWidth;
-    this.viewportHeight = viewportHeight;
+    this.viewportSize = viewportSize;
   }
 
   // handle camera move (dx, dy in px)
   move(dx, dy) {
-    this.worldX -= dx/(this.pixelsPerWorldUnit*this.zoom);  
-    this.worldY += dy/(this.pixelsPerWorldUnit*this.zoom);  
+    this.position.x -= dx/(this.pixelsPerWorldUnit*this.zoom);  
+    this.position.y += dy/(this.pixelsPerWorldUnit*this.zoom);  
   }
 
   // get cell world coordinates from screen coordinates
-  screenToCell(screenX, screenY) {
-    // viewport left-top corner coordinates
-    const worldViewportX = this.worldX - this.viewportWidth/(2*this.pixelsPerWorldUnit);
-    const worldViewportY = this.worldY - this.viewportHeight/(2*this.pixelsPerWorldUnit);
+  screenToCell(screen) {
+    // viewport left-top corner
+    const worldViewportLeftTop = this.position.sub(
+      new Vector2(this.viewportSize.x, -this.viewportSize.y)
+        .div(2*this.pixelsPerWorldUnit)
+    );
 
     // world coordinates relative to viewport left-top corner
-    const worldX = screenX/this.pixelsPerWorldUnit;
-    const worldY = -screenY/this.pixelsPerWorldUnit;
+    const world = new Vector2(screen.x, -screen.y).div(this.pixelsPerWorldUnit);
 
     // position relative to camera
-    const localX = worldViewportX + worldX;
-    const localY = worldViewportY + worldY;
+    const local = worldViewportLeftTop.add(world);
 
     // world position
-    const globalX = localX + this.worldX;
-    const globalY = localY + this.worldY;
+    const global = local.add(this.position);
 
-    return {
-      x: Math.floor(globalX),
-      y: Math.floor(globalY),
-    }
+    return new Vector2(
+      Math.floor(global.x),
+      Math.floor(global.y)
+    )
   }
 
   visibleRect() {
-    const worldViewportLeftTopX = this.worldX - this.viewportWidth/(2*this.pixelsPerWorldUnit);
-    const worldViewportLeftTopY = this.worldY + this.viewportHeight/(2*this.pixelsPerWorldUnit);
+    const viewportLeftTop = this.position.sub(
+      new Vector2(this.viewportSize.x, -this.viewportSize.y)
+        .div(2*this.pixelsPerWorldUnit*this.zoom)
+    );
 
-    const worldViewportRightBottomX = this.worldX + this.viewportWidth/(2*this.pixelsPerWorldUnit);
-    const worldViewportRightBottomY = this.worldY - this.viewportHeight/(2*this.pixelsPerWorldUnit);
+    const viewportBottomRight = this.position.sub(
+      new Vector2(-this.viewportSize.x, this.viewportSize.y)
+        .div(2*this.pixelsPerWorldUnit*this.zoom)
+    );
 
     return [
-      {
-        x: worldViewportLeftTopX,
-        y: worldViewportLeftTopY
-      },
-      {
-        x: worldViewportRightBottomX,
-        y: worldViewportRightBottomY
-      }
+      viewportLeftTop,
+      viewportBottomRight
     ]
   }
 
-  resizeViewport(newWidth, newHeight) {
-    this.viewportWidth = newWidth;
-    this.viewportHeight = newHeight;
+  resizeViewport(v) {
+    this.viewportSize = v;
   }
 }
