@@ -19,12 +19,11 @@ const result = await WebAssembly.instantiateStreaming(
 go.run(result.instance);
 
 const camera = new Camera(new Vector2(), 1, CELL_SIZE, new Vector2(canvas.width, canvas.height));
-const fieldRenderer = new FieldRenderer(canvas, ctx, CELL_SIZE);
+const fieldRenderer = new FieldRenderer(canvas, ctx, CELL_SIZE, camera);
 
 function onCameraMove(dx, dy) {
   camera.move(dx, dy);
-  const [viewportLT, viewportBR] = camera.visibleRect();
-  fieldRenderer.render(viewportLT, viewportBR, camera.zoom);
+  fieldRenderer.render();
 }
 
 const inputManager = new InputManager(
@@ -45,9 +44,7 @@ function resizeCanvas() {
   canvas.height = window.innerHeight;
 
   camera.resizeViewport(new Vector2(canvas.width, canvas.height));
-
-  const [viewportLT, viewportBR] = camera.visibleRect();
-  fieldRenderer.render(viewportLT, viewportBR, camera.zoom);
+  fieldRenderer.render();
 }
 
 window.addEventListener("resize", resizeCanvas);

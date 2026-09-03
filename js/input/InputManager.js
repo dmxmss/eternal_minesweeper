@@ -76,7 +76,7 @@ export class InputManager {
     
     const distance = drFromStart.length();
 
-    if (!this.isDragging && distance >= this.dragThreshold ** 2) {
+    if (!this.isDragging && distance >= this.dragThreshold) {
       this.isDragging = true;
     }
 
