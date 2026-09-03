@@ -2,7 +2,7 @@ import { Camera } from "./game/Camera.js";
 import { InputManager } from "./input/InputManager.js";
 import { FieldRenderer } from "./render/FieldRenderer.js";
 
-const CELL_SIZE = 40;
+const CELL_SIZE = 32;
 const DRAG_THRESHOLD = 10;
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
