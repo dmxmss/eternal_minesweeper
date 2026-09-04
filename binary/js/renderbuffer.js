@@ -76,7 +76,7 @@ export function mapItem(item) {
       minesAround = item.state;
   }
 
-  const cell = new Cell(item.x, item.y, type, minesAround);
+  const cell = new Cell(item.x, item.y, cellType, minesAround);
 
   return cell;
 }

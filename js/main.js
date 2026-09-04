@@ -22,7 +22,7 @@ go.run(result.instance);
 
 const renderBuffer = new RenderBuffer();
 const camera = new Camera(new Vector2(), 1, CELL_SIZE, new Vector2(canvas.width, canvas.height));
-const fieldManager = new fieldManager(game, renderBuffer);
+const fieldManager = new FieldManager(game, renderBuffer);
 const fieldRenderer = new FieldRenderer(canvas, ctx, CELL_SIZE, camera, fieldManager);
 
 const inputManager = new InputManager(

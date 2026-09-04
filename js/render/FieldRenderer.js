@@ -1,3 +1,5 @@
+import { Vector2 } from "../types/Vector2.js";
+
 export class FieldRenderer {
   constructor(canvas, ctx, cellSize, camera, fieldManager) {
     this.canvas = canvas;
