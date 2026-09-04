@@ -1,3 +1,5 @@
+import { Cell } from "../../js/types/Cell.js";
+
 const HEADER_SIZE = 8;
 const ITEM_SIZE = 18;
 
@@ -6,7 +8,7 @@ const TYPE_CELL = 0;
 const CELL_FLAGGED = 16;
 const CELL_MINE = 32;
 
-class RenderBuffer {
+export class RenderBuffer {
     constructor() {
         this.version = 0;
     }
@@ -57,4 +59,24 @@ class RenderBuffer {
         this.version = version;
         return items;
     }
+}
+
+export function mapItem(item) {
+  if (item.type !== TYPE_CELL) return;
+
+  let cellType = "";
+  let minesAround = 0;
+  switch (item.state) {
+    case CELL_MINE:
+      cellType = "mine";
+    case CELL_FLAGGED:
+      cellType = "flagged";
+    default:
+      cellType = "open";
+      minesAround = item.state;
+  }
+
+  const cell = new Cell(item.x, item.y, type, minesAround);
+
+  return cell;
 }
