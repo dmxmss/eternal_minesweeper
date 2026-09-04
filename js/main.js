@@ -1,7 +1,9 @@
 import { Camera } from "./game/Camera.js";
+import { FieldManager } from "./game/FieldManager.js";
 import { InputManager } from "./input/InputManager.js";
 import { FieldRenderer } from "./render/FieldRenderer.js";
 import { Vector2 } from "./types/Vector2.js";
+import { RenderBuffer } from "../binary/js/renderbuffer.js";
 
 const CELL_SIZE = 32;
 const DRAG_THRESHOLD = 10;
@@ -18,13 +20,10 @@ const result = await WebAssembly.instantiateStreaming(
 
 go.run(result.instance);
 
+const renderBuffer = new RenderBuffer();
 const camera = new Camera(new Vector2(), 1, CELL_SIZE, new Vector2(canvas.width, canvas.height));
-const fieldRenderer = new FieldRenderer(canvas, ctx, CELL_SIZE, camera);
-
-function onCameraMove(dx, dy) {
-  camera.move(dx, dy);
-  fieldRenderer.render();
-}
+const fieldManager = new fieldManager(game, renderBuffer);
+const fieldRenderer = new FieldRenderer(canvas, ctx, CELL_SIZE, camera, fieldManager);
 
 const inputManager = new InputManager(
   canvas, 
@@ -34,10 +33,14 @@ const inputManager = new InputManager(
 
 inputManager.onCellClick = (x, y) => {
   game.openCell(x, y);
-  const buf = game.getRenderBuffer();
-  console.log(buf);
+  fieldManager.update();
+  fieldRenderer.render();
 };
-inputManager.onCameraMove = onCameraMove;
+
+inputManager.onCameraMove = (dx, dy) => {
+  camera.move(dx, dy);
+  fieldRenderer.render();
+};
 
 function resizeCanvas() {
   canvas.width = window.innerWidth;

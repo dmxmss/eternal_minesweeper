@@ -1,9 +1,10 @@
 export class FieldRenderer {
-  constructor(canvas, ctx, cellSize, camera) {
+  constructor(canvas, ctx, cellSize, camera, fieldManager) {
     this.canvas = canvas;
     this.ctx = ctx;
     this.cellSize = cellSize;
     this.camera = camera;
+    this.fieldManager = fieldManager;
   }
 
   render() {
@@ -20,14 +21,16 @@ export class FieldRenderer {
 
     for (let y = startY; y < endY; y++) {
       for (let x = startX; x < endX; x++) {
-        this.drawCell(x, y, viewportLT);
+        const cell = this.fieldManager.getCell(new Vector2(x, y));
+
+        this.drawCell(cell, viewportLT);
       }
     }
   }
 
-  drawCell(x, y, viewportLT) {
-    const px = this.camera.zoom*this.cellSize*(x - viewportLT.x);
-    const py = this.camera.zoom*this.cellSize*(viewportLT.y - y - 1); // -1 is here because i set cell coordinates in left-bottom corner, but canvas uses left-top corner to draw rectangle
+  drawCell(cell, viewportLT) {
+    const px = this.camera.zoom*this.cellSize*(cell.x - viewportLT.x);
+    const py = this.camera.zoom*this.cellSize*(viewportLT.y - cell.y - 1); // -1 is here because i set cell coordinates in left-bottom corner, but canvas uses left-top corner to draw rectangle
 
     this.ctx.fillStyle = "#aaa";
     this.ctx.fillRect(
