@@ -7,6 +7,8 @@ import { RenderBuffer } from "../binary/js/renderbuffer.js";
 
 const CELL_SIZE = 32;
 const DRAG_THRESHOLD = 10;
+const CHUNK_SIZE = 32;
+
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = false;
