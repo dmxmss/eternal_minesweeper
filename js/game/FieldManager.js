@@ -20,8 +20,6 @@ export class FieldManager {
     for (const cell of cells) {
       this.renderCache.set(key(cell.x, cell.y), cell);
     }
-
-    console.log(this.renderCache)
   }
 }
 

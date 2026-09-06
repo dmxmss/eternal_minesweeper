@@ -74,6 +74,17 @@ export class FieldRenderer {
         this.camera.zoom*(this.cellSize - 2),
         this.camera.zoom*(this.cellSize - 2)
       );
+
+      if (cell.value === 0) return;
+      this.ctx.font = "bold 24px Arial";
+      this.ctx.textAlign = "center";
+      this.ctx.textBaseline = "middle";
+      this.ctx.fillStyle = "blue";
+      this.ctx.fillText(
+        `${cell.value}`,
+        px + this.cellSize / 2,
+        py + this.cellSize / 2
+      );
     }
   }
 }
