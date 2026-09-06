@@ -75,6 +75,14 @@ export class FieldRenderer {
         this.camera.zoom*(this.cellSize - 2)
       );
 
+      this.ctx.strokeStyle = "#666";
+      this.ctx.strokeRect(
+        px + 0.5,
+        py + 0.5,
+        this.camera.zoom*(this.cellSize - 1),
+        this.camera.zoom*(this.cellSize - 1)
+      );
+
       if (cell.value === 0) return;
       this.ctx.font = "bold 24px Arial";
       this.ctx.textAlign = "center";
