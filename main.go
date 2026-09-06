@@ -14,10 +14,12 @@ var g *core.Game
 func main() {
 	renderBuffer := binary.NewRenderBuffer(1024)
 
-	mineGenerator := &mine_generator.MineGeneratorV1{}
+	seed := uint64(123)
+	mineThreshold := uint64(0.2 * float64(^uint64(0))) // 20% probability for mines
+	mineGenerator := mine_generator.NewMineGeneratorV1(seed, mineThreshold)
 	renderBufferManager := render.NewRenderBufferManager(renderBuffer)
 
-	g = core.NewGame(mineGenerator, renderBufferManager)
+	g = core.NewGame(seed, mineGenerator, renderBufferManager)
 
 	api := js.Global().Get("Object").New()
 

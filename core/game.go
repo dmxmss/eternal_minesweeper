@@ -14,9 +14,9 @@ func (g *Game) Start() {
 
 }
 
-func NewGame(mineGenerator MineGenerator, renderBuffer RenderBufferInterface) *Game {
+func NewGame(seed uint64, mineGenerator MineGenerator, renderBuffer RenderBufferInterface) *Game {
 	world := entities.WorldState{
-		Seed: 123,
+		Seed: seed,
 	}
 
 	return &Game{
@@ -41,6 +41,15 @@ func (g *Game) OpenCell(x, y int64) entities.GameState {
 
 	isMine := g.mineGenerator.IsMine(x, y)	
 	if isMine {
+		g.renderBuffer.SetCells([]entities.Cell{
+			{
+				Position: entities.Coord{X: x, Y: y},
+				State: entities.CellState{
+					Type: entities.CellMine,
+				},
+			},
+		})
+		g.renderBuffer.Save()
 		return entities.GameOver
 	}
 

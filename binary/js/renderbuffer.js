@@ -69,8 +69,10 @@ export function mapItem(item) {
   switch (item.state) {
     case CELL_MINE:
       cellType = "mine";
+      break
     case CELL_FLAGGED:
       cellType = "flagged";
+      break
     default:
       cellType = "open";
       minesAround = item.state;

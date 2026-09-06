@@ -9,7 +9,7 @@ export class FieldManager {
   }
 
   getCell(position) {
-    return this.renderCache.get(position.x, position.y) || new Cell(position.x, position.y, "closed");
+    return this.renderCache.get(key(position.x, position.y)) || new Cell(position.x, position.y, "closed");
   }
 
   update() {
@@ -20,6 +20,8 @@ export class FieldManager {
     for (const cell of cells) {
       this.renderCache.set(key(cell.x, cell.y), cell);
     }
+
+    console.log(this.renderCache)
   }
 }
 

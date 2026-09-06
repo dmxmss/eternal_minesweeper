@@ -20,10 +20,20 @@ const result = await WebAssembly.instantiateStreaming(
 
 go.run(result.instance);
 
+const mineSprite = new Image();
+mineSprite.src = "../assets/mine/mine32.png";
+const flagSprite = new Image();
+flagSprite.src = "../assets/flag/flag32.png";
+
+const sprites = {
+  mine: mineSprite,
+  flag: flagSprite
+};
+
 const renderBuffer = new RenderBuffer();
 const camera = new Camera(new Vector2(), 1, CELL_SIZE, new Vector2(canvas.width, canvas.height));
 const fieldManager = new FieldManager(game, renderBuffer);
-const fieldRenderer = new FieldRenderer(canvas, ctx, CELL_SIZE, camera, fieldManager);
+const fieldRenderer = new FieldRenderer(canvas, ctx, CELL_SIZE, camera, fieldManager, sprites);
 
 const inputManager = new InputManager(
   canvas, 

@@ -1,12 +1,13 @@
 import { Vector2 } from "../types/Vector2.js";
 
 export class FieldRenderer {
-  constructor(canvas, ctx, cellSize, camera, fieldManager) {
+  constructor(canvas, ctx, cellSize, camera, fieldManager, sprites) {
     this.canvas = canvas;
     this.ctx = ctx;
     this.cellSize = cellSize;
     this.camera = camera;
     this.fieldManager = fieldManager;
+    this.sprites = sprites;
   }
 
   render() {
@@ -31,23 +32,48 @@ export class FieldRenderer {
   }
 
   drawCell(cell, viewportLT) {
-    const px = this.camera.zoom*this.cellSize*(cell.x - viewportLT.x);
-    const py = this.camera.zoom*this.cellSize*(viewportLT.y - cell.y - 1); // -1 is here because i set cell coordinates in left-bottom corner, but canvas uses left-top corner to draw rectangle
+    const px = this.camera.zoom*this.cellSize * (Number(cell.x) - viewportLT.x);
+    const py = this.camera.zoom*this.cellSize * (viewportLT.y - Number(cell.y) - 1); // -1 is here because i set cell coordinates in left-bottom corner, but canvas uses left-top corner to draw rectangle
 
-    this.ctx.fillStyle = "#aaa";
-    this.ctx.fillRect(
-      px + 1,
-      py + 1,
-      this.camera.zoom*(this.cellSize - 2),
-      this.camera.zoom*(this.cellSize - 2)
-    );
+    if (cell.type === "closed") {
+      this.ctx.fillStyle = "#aaa";
+      this.ctx.fillRect(
+        px + 1,
+        py + 1,
+        this.camera.zoom*(this.cellSize - 2),
+        this.camera.zoom*(this.cellSize - 2)
+      );
 
-    this.ctx.strokeStyle = "#666";
-    this.ctx.strokeRect(
-      px + 0.5,
-      py + 0.5,
-      this.camera.zoom*(this.cellSize - 1),
-      this.camera.zoom*(this.cellSize - 1)
-    );
+      this.ctx.strokeStyle = "#666";
+      this.ctx.strokeRect(
+        px + 0.5,
+        py + 0.5,
+        this.camera.zoom*(this.cellSize - 1),
+        this.camera.zoom*(this.cellSize - 1)
+      );
+    } else if (cell.type === "mine") {
+      this.ctx.fillStyle = "#aaa";
+      this.ctx.fillRect(
+        px + 1,
+        py + 1,
+        this.camera.zoom*(this.cellSize - 2),
+        this.camera.zoom*(this.cellSize - 2)
+      );
+      this.ctx.drawImage(
+        this.sprites.mine,
+        px + 1,
+        py + 1,
+        this.camera.zoom*(this.cellSize - 1),
+        this.camera.zoom*(this.cellSize - 1)
+      );
+    } else if (cell.type === "open") {
+      this.ctx.fillStyle = "#eee";
+      this.ctx.fillRect(
+        px + 1,
+        py + 1,
+        this.camera.zoom*(this.cellSize - 2),
+        this.camera.zoom*(this.cellSize - 2)
+      );
+    }
   }
 }

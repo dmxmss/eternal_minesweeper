@@ -21,17 +21,14 @@ export class Camera {
     // viewport left-top corner
     const worldViewportLeftTop = this.position.sub(
       new Vector2(this.viewportSize.x, -this.viewportSize.y)
-        .div(2*this.pixelsPerWorldUnit)
+        .div(2*this.pixelsPerWorldUnit*this.zoom)
     );
 
     // world coordinates relative to viewport left-top corner
-    const world = new Vector2(screen.x, -screen.y).div(this.pixelsPerWorldUnit);
+    const world = new Vector2(screen.x, -screen.y).div(this.zoom*this.pixelsPerWorldUnit);
 
-    // position relative to camera
-    const local = worldViewportLeftTop.add(world);
-
-    // world position
-    const global = local.add(this.position);
+    // world cell position
+    const global = worldViewportLeftTop.add(world);
 
     return new Vector2(
       Math.floor(global.x),
