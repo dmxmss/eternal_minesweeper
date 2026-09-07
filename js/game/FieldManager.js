@@ -1,15 +1,17 @@
 import { mapItem } from "../../binary/js/renderbuffer.js";
 import { Cell } from "../types/Cell.js";
+import { Chunk } from "../types/Chunk.js";
 
 export class FieldManager {
-  constructor(game, renderBuffer) {
+  constructor(game, renderBuffer, chunkSize = 32) {
     this.game = game;
     this.renderBuffer = renderBuffer;
-    this.renderCache = new Map(); // map of cells
+    this.renderCache = new Map(); // map of chunks
+    this.chunkSize = chunkSize;
   }
 
-  getCell(position) {
-    return this.renderCache.get(key(position.x, position.y)) || new Cell(position.x, position.y, "closed");
+  getChunk(position) {
+    return this.renderCache.get(key(position.x, position.y)) || new Chunk(this.chunkSize, position);
   }
 
   update() {

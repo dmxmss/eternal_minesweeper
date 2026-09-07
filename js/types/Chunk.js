@@ -1,3 +1,5 @@
+import { Cell } from "../types/Cell.js";
+
 export class Chunk {
   constructor(size, position) {
     this.position = position;
@@ -7,7 +9,7 @@ export class Chunk {
   }
 
   get(x, y) {
-    return this.cells[y * this.size + x];
+    return this.cells[y * this.size + x] || new Cell(x + this.position.x, y + this.position.y, "closed");
   }
 
   set(x, y, cell) {
