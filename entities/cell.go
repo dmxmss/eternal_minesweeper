@@ -13,7 +13,8 @@ type CellState struct {
 type CellStateType int
 
 const (
-	CellMines CellStateType = iota
+	CellClosed CellStateType = iota
+	CellMines 	
 	CellFlagged
 	CellMine
 )
