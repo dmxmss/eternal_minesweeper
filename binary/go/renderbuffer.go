@@ -4,9 +4,10 @@ import "encoding/binary"
 
 const (
 	ProtocolVersion = "1.0.0"
+	ChunkSize = 32
 
 	HeaderSize = 8
-	ItemSize   = 18
+	ItemSize   = 16 + ChunkSize*ChunkSize
 )
 
 type ItemType uint8
@@ -32,22 +33,22 @@ const (
 	CellMine    CellState = 32
 )
 
-type Cell struct {
+type Chunk struct {
 	WorldX int64
 	WorldY int64
-	State  CellState
+	Cells [ChunkSize*ChunkSize]CellState
 }
 
 type RenderBuffer struct {
 	version uint32
 
-	items []Cell
+	items []Chunk
 	buf   []byte
 }
 
 func NewRenderBuffer(capacity int) *RenderBuffer {
 	return &RenderBuffer{
-		items: make([]Cell, 0, capacity),
+		items: make([]Chunk, 0, capacity),
 		buf:   make([]byte, HeaderSize, HeaderSize+capacity*ItemSize),
 	}
 }
@@ -56,8 +57,8 @@ func (r *RenderBuffer) Bytes() []byte {
 	return r.buf
 }
 
-func (r *RenderBuffer) SetCells(cells []Cell) {
-	r.items = append(r.items[:0], cells...)
+func (r *RenderBuffer) SetChunks(chunks []Chunk) {
+	r.items = append(r.items[:0], chunks...)
 }
 
 func (r *RenderBuffer) Save() []byte {
@@ -83,21 +84,22 @@ func (r *RenderBuffer) Save() []byte {
 		uint32(itemCount),
 	)
 
-	for i, cell := range r.items {
+	for i, chunk := range r.items {
 		offset := HeaderSize + i*ItemSize
 
 		binary.LittleEndian.PutUint64(
 			r.buf[offset:offset+8],
-			uint64(cell.WorldX),
+			uint64(chunk.WorldX),
 		)
 
 		binary.LittleEndian.PutUint64(
 			r.buf[offset+8:offset+16],
-			uint64(cell.WorldY),
+			uint64(chunk.WorldY),
 		)
 
-		r.buf[offset+16] = uint8(TypeCell)
-		r.buf[offset+17] = uint8(cell.State)
+		for j, cell := range chunk.Cells {
+			r.buf[offset+17+j] = uint8(cell)
+		}
 	}
 
 	return r.buf
