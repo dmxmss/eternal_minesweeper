@@ -1,7 +1,5 @@
 export class Cell {
-  constructor(x, y, type, value) {
-    this.x = x;
-    this.y = y;
+  constructor(type, value) {
     this.type = type;
     this.value = value;
   }

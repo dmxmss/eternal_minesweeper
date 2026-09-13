@@ -1,4 +1,4 @@
-import { mapItem } from "../../binary/js/renderbuffer.js";
+import { mapChunk } from "../../binary/js/renderbuffer.js";
 import { Cell } from "../types/Cell.js";
 import { Chunk } from "../types/Chunk.js";
 
@@ -17,10 +17,10 @@ export class FieldManager {
   update() {
     const buf = this.game.getRenderBuffer();
     const items = this.renderBuffer.read(buf);
-    const cells = items.map(mapItem);
+    const chunks = items.map(mapChunk);
 
-    for (const cell of cells) {
-      this.renderCache.set(key(cell.x, cell.y), cell);
+    for (const chunk of chunks) {
+      this.renderCache.set(key(chunk.position.x, chunk.position.y), chunk);
     }
   }
 }

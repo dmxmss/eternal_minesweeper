@@ -4,6 +4,6 @@ import "github.com/dmxmss/eternal_minesweeper/entities"
 
 type RenderBufferInterface interface {
 	Bytes() []byte
-	SetCells([]entities.Cell) error
+	SetChunks([]entities.Cell) error
 	Save() error
 }

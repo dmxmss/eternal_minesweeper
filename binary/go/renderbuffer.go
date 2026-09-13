@@ -31,6 +31,7 @@ const (
 
 	CellFlagged CellState = 16
 	CellMine    CellState = 32
+	CellClosed  CellState = 64
 )
 
 type Chunk struct {

@@ -29,3 +29,11 @@ func (c *Chunk) Set(x, y int, cell Cell) {
 
 	c.cells[x * c.size + y] = cell
 }
+
+func (c *Chunk) GetSize() int {
+	return c.size
+}
+
+func (c *Chunk) GetCells() []Cell {
+	return c.cells
+}

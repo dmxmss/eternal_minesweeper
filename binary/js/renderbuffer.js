@@ -1,4 +1,6 @@
 import { Cell } from "../../js/types/Cell.js";
+import { Chunk } from "../../js/types/Chunk.js";
+import { Vector2 } from "../../js/types/Vector2.js";
 
 const CHUNK_SIZE = 32;
 const HEADER_SIZE = 8;
@@ -8,6 +10,7 @@ const TYPE_CELL = 0;
 
 const CELL_FLAGGED = 16;
 const CELL_MINE = 32;
+const CELL_CLOSED = 64;
 
 export class RenderBuffer {
   constructor() {
@@ -64,24 +67,38 @@ export class RenderBuffer {
   }
 }
 
-export function mapItem(item) {
-  if (item.type !== TYPE_CELL) return;
-
+export function mapCell(cellState) {
   let cellType = "";
   let minesAround = 0;
-  switch (item.state) {
+  switch (cellState) {
     case CELL_MINE:
       cellType = "mine";
       break
     case CELL_FLAGGED:
       cellType = "flagged";
       break
+    case CELL_CLOSED:
+      cellType = "closed";
+      break
     default:
       cellType = "open";
-      minesAround = item.state;
+      minesAround = cellState;
   }
 
-  const cell = new Cell(item.x, item.y, cellType, minesAround);
+  const cell = new Cell(cellType, minesAround);
 
   return cell;
+}
+
+export function mapChunk(bChunk) {
+  const chunk = new Chunk(CHUNK_SIZE, new Vector2(bChunk.x, bChunk.y));
+
+  for (let i = 0; i < bChunk.cells.length; i++) {
+    const cell = mapCell(bChunk.cells[i]);
+
+    const x = i % CHUNK_SIZE;
+    const y = Math.floor(i / CHUNK_SIZE);
+
+    chunk.set(x, y, cell);
+  }
 }

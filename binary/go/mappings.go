@@ -1,8 +1,12 @@
 package binary
 
-import "github.com/dmxmss/eternal_minesweeper/entities"
+import (
+	"errors"
 
-func CellToBinary(cell entities.Cell) Cell {
+	"github.com/dmxmss/eternal_minesweeper/entities"
+)
+
+func CellToBinary(cell entities.Cell) CellState {
 	var state CellState
 
 	switch cell.State.Type {
@@ -33,11 +37,28 @@ func CellToBinary(cell entities.Cell) Cell {
 
 	case entities.CellFlagged:
 		state = CellFlagged
+
+	case entities.CellClosed:
+		state = CellClosed
 	}
 
-	return Cell{
-		WorldX: cell.Position.X,
-		WorldY: cell.Position.Y,
-		State: state,
+	return state
+}
+
+func ChunkToBinary(chunk *entities.Chunk) (*Chunk, error) {
+	if chunk.GetSize() != ChunkSize {
+		return nil, errors.New("binary chunk's size and given chunk's size do not match")
 	}
+
+	var bCells [ChunkSize*ChunkSize]CellState
+	for i, cell := range chunk.GetCells() {
+		bCell := CellToBinary(cell)
+		bCells[i] = bCell
+	}	
+
+	return &Chunk{
+		WorldX: chunk.Position.X,
+		WorldY: chunk.Position.Y,
+		Cells: bCells,
+	}, nil
 }

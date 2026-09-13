@@ -14,18 +14,29 @@ export class FieldRenderer {
     this.ctx.fillStyle = "#222";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-    const [viewportLT, viewportBR] = this.camera.visibleRect();
+    let [viewportLT, viewportBR] = this.camera.visibleRect();
+    viewportLT = viewportLT.div(this.fieldManager.chunkSize);
+    viewportBR = viewportBR.div(this.fieldManager.chunkSize);
 
     const startX = Math.floor(viewportLT.x);
     const startY = Math.floor(viewportBR.y);
 
-    const endX = Math.ceil(viewportBR.x);
-    const endY = Math.ceil(viewportLT.y);
+    const endX = Math.floor(viewportBR.x);
+    const endY = Math.floor(viewportLT.y);
 
     for (let y = startY; y < endY; y++) {
       for (let x = startX; x < endX; x++) {
-        const cell = this.fieldManager.getCell(new Vector2(x, y));
+        const chunk = this.fieldManager.getChunk(new Vector2(x, y));
 
+        this.drawChunk(chunk, viewportLT);
+      }
+    }
+  }
+
+  drawChunk(chunk, viewportLT) {
+    for (let x = 0; x < this.fieldManager.chunkSize; x++) {
+      for (let y = 0; y < this.fieldManager.chunkSize; y++) {
+        const cell = chunk.get(x, y);
         this.drawCell(cell, viewportLT);
       }
     }
