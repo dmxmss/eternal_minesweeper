@@ -15,17 +15,15 @@ export class FieldRenderer {
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     let [viewportLT, viewportBR] = this.camera.visibleRect();
-    viewportLT = viewportLT.div(this.fieldManager.chunkSize);
-    viewportBR = viewportBR.div(this.fieldManager.chunkSize);
 
-    const startX = Math.floor(viewportLT.x);
-    const startY = Math.floor(viewportBR.y);
+    const startX = Math.floor(viewportLT.x / this.fieldManager.chunkSize);
+    const startY = Math.floor(viewportBR.y / this.fieldManager.chunkSize);
 
-    const endX = Math.floor(viewportBR.x);
-    const endY = Math.floor(viewportLT.y);
+    const endX = Math.floor(viewportBR.x / this.fieldManager.chunkSize);
+    const endY = Math.floor(viewportLT.y / this.fieldManager.chunkSize);
 
-    for (let y = startY; y < endY; y++) {
-      for (let x = startX; x < endX; x++) {
+    for (let y = startY; y <= endY; y++) {
+      for (let x = startX; x <= endX; x++) {
         const chunk = this.fieldManager.getChunk(new Vector2(x, y));
 
         this.drawChunk(chunk, viewportLT);
@@ -37,14 +35,15 @@ export class FieldRenderer {
     for (let x = 0; x < this.fieldManager.chunkSize; x++) {
       for (let y = 0; y < this.fieldManager.chunkSize; y++) {
         const cell = chunk.get(x, y);
-        this.drawCell(cell, viewportLT);
+        const worldCellPos = new Vector2(x, y).add(chunk.position.mul(this.fieldManager.chunkSize));
+        this.drawCell(worldCellPos, cell, viewportLT);
       }
     }
   }
 
-  drawCell(cell, viewportLT) {
-    const px = this.camera.zoom*this.cellSize * (Number(cell.x) - viewportLT.x);
-    const py = this.camera.zoom*this.cellSize * (viewportLT.y - Number(cell.y) - 1); // -1 is here because i set cell coordinates in left-bottom corner, but canvas uses left-top corner to draw rectangle
+  drawCell(cellPos, cell, viewportLT) {
+    const px = this.camera.zoom*this.cellSize * (Number(cellPos.x) - viewportLT.x);
+    const py = this.camera.zoom*this.cellSize * (viewportLT.y - Number(cellPos.y) - 1); // -1 is here because i set cell coordinates in left-bottom corner, but canvas uses left-top corner to draw rectangle
 
     if (cell.type === "closed") {
       this.ctx.fillStyle = "#aaa";

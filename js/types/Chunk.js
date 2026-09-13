@@ -9,7 +9,7 @@ export class Chunk {
   }
 
   get(x, y) {
-    return this.cells[y * this.size + x] || new Cell(x + this.position.x, y + this.position.y, "closed");
+    return this.cells[y * this.size + x] || new Cell("closed", 0);
   }
 
   set(x, y, cell) {
