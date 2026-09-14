@@ -10,8 +10,8 @@ func CellToBinary(cell entities.Cell) CellState {
 	var state CellState
 
 	switch cell.State.Type {
-	case entities.CellMines:
-		switch cell.State.Mines {
+	case entities.CellOpen:
+		switch cell.State.Value {
 		case 0:
 			state = CellMines0
 		case 1:

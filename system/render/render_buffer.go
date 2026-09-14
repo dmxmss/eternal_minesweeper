@@ -19,15 +19,18 @@ func (r *RenderBufferManager) Bytes() []byte {
 	return r.renderBuffer.Bytes()
 }
 
-func (r *RenderBufferManager) SetCells(cells []entities.Cell) error {
-	var binaryCells []binary.Cell
+func (r *RenderBufferManager) SetChunks(chunks []entities.Chunk) error {
+	var bChunks []binary.Chunk
+	for _, chunk := range chunks {
+		bChunk, err := binary.ChunkToBinary(&chunk)	
+		if err != nil {
+			return err
+		}
 
-	for _, cell := range cells {
-		binaryCell := binary.CellToBinary(cell)
-		binaryCells = append(binaryCells, binaryCell)
+		bChunks = append(bChunks, *bChunk)
 	}
 
-	r.renderBuffer.SetCells(binaryCells)
+	r.renderBuffer.SetChunks(bChunks)
 
 	return nil
 }

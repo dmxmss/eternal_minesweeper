@@ -16,11 +16,11 @@ export class FieldRenderer {
 
     let [viewportLT, viewportBR] = this.camera.visibleRect();
 
-    const startX = Math.floor(viewportLT.x / this.fieldManager.chunkSize);
-    const startY = Math.floor(viewportBR.y / this.fieldManager.chunkSize);
+    const startX = BigInt(Math.floor(viewportLT.x / this.fieldManager.chunkSize));
+    const startY = BigInt(Math.floor(viewportBR.y / this.fieldManager.chunkSize));
 
-    const endX = Math.floor(viewportBR.x / this.fieldManager.chunkSize);
-    const endY = Math.floor(viewportLT.y / this.fieldManager.chunkSize);
+    const endX = BigInt(Math.floor(viewportBR.x / this.fieldManager.chunkSize));
+    const endY = BigInt(Math.floor(viewportLT.y / this.fieldManager.chunkSize));
 
     for (let y = startY; y <= endY; y++) {
       for (let x = startX; x <= endX; x++) {
@@ -35,7 +35,7 @@ export class FieldRenderer {
     for (let x = 0; x < this.fieldManager.chunkSize; x++) {
       for (let y = 0; y < this.fieldManager.chunkSize; y++) {
         const cell = chunk.get(x, y);
-        const worldCellPos = new Vector2(x, y).add(chunk.position.mul(this.fieldManager.chunkSize));
+        const worldCellPos = new Vector2(BigInt(x), BigInt(y)).add(chunk.position.mul(BigInt(this.fieldManager.chunkSize)));
         this.drawCell(worldCellPos, cell, viewportLT);
       }
     }

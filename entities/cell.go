@@ -7,14 +7,14 @@ type Cell struct {
 
 type CellState struct {
 	Type CellStateType
-	Mines int
+	Value int
 }
 
 type CellStateType int
 
 const (
 	CellClosed CellStateType = iota
-	CellMines 	
+	CellOpen 	
 	CellFlagged
 	CellMine
 )

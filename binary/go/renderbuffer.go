@@ -99,7 +99,7 @@ func (r *RenderBuffer) Save() []byte {
 		)
 
 		for j, cell := range chunk.Cells {
-			r.buf[offset+17+j] = uint8(cell)
+			r.buf[offset+16+j] = uint8(cell)
 		}
 	}
 

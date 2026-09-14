@@ -101,4 +101,6 @@ export function mapChunk(bChunk) {
 
     chunk.set(x, y, cell);
   }
+
+  return chunk
 }
